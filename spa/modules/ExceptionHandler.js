@@ -6,13 +6,15 @@ export class ExceptionHandler {
     /**
      * 
      * @param {String} message
-     * throw new Exception if an error message is passed as argument
+     * @param {number} httpErrorCode
+     * Throw new Exception if an error message is passed as argument
+     * Return a HTTPError page if httpErrorCode is given
      */
-    constructor(message = null) {
+    constructor(message = null, httpErrorCode = null) {
         this.#message = message
-        if(this.#message) {
-            this.#fire()
-        }
+        if(message && httpErrorCode) {
+            this.#fire(httpErrorCode)
+        } else if(message) this.#fire()
 
         return this
     }
@@ -22,9 +24,14 @@ export class ExceptionHandler {
      */
     #fire(type = null) {
         if(type) {
-            throw this.#message
-        }
-        else console.error(`Error: ${this.#message}`)
+            switch(typeof type) {
+                case 'string': 
+                    throw this.#message
+                case 'number': 
+                    return "HTTPError"
+
+            }
+        } else console.error(this.#message);
     }
 
     /**
@@ -35,7 +42,7 @@ export class ExceptionHandler {
     init(element) {
         if(!element) {
             this.#message = 'NullError: "init" argument cannot be null'
-            this.#fire()
+            this.#fire('nullError')
         } else {
             this.#element = element
             return this
@@ -50,7 +57,7 @@ export class ExceptionHandler {
         try {
             if(typeof this.#element !== type) {
                 this.#message = `TypeError: Given argument must be of type ${type}`
-                this.#fire()
+                this.#fire('TypeError')
             }
             else return this
         } catch (error) {
@@ -67,12 +74,19 @@ export class ExceptionHandler {
             if(this.#element instanceof typeof_interface) return this
             else{
                 this.#message = `InstanceError: Given argument must be an instance of ${interface_type.name}`
-                this.#fire()
+                this.#fire('InstanceError')
             }
         } catch (error) {
             this.#message = error
             this.#fire()
         }
+    }
+
+    static loadHTTPErrorsTemplates(url = `${window.location.origin}/spa/Errors`) {
+        fetch(url)
+        .then(res => {
+            console.log(res);
+        })
     }
 
 

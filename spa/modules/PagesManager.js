@@ -1,6 +1,6 @@
 import { ExceptionHandler } from "./ExceptionHandler.js";
 
-export default class ComponentManager {
+export default class PagesManager {
 
     static #data = {}
     static #component;
