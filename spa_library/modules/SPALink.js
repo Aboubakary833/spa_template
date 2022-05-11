@@ -1,7 +1,8 @@
+import { PathChanged } from "../index.js"
+
 export default class SPALink extends HTMLElement {
     constructor() {
         super()
-
     }
 
     connectedCallback() {
@@ -13,10 +14,17 @@ export default class SPALink extends HTMLElement {
             </a>
         `
 
+        this.handleRedirect()
         
     }
 
-    handleRedirect(e) {
-        console.log(e);
+    handleRedirect() {
+        Array.from(this.querySelectorAll('a')).forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault()
+                window.history.pushState({}, '', link.href)
+                window.dispatchEvent(PathChanged)
+            })
+        })
     }
 }

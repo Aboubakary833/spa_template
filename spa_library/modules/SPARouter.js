@@ -46,20 +46,32 @@ export default class SPARouter extends HTMLElement {
       this.#getActiveRoute()
       .then(data => {
         setTimeout(function() {
-          const {template, script} = data
-          SPARouter.#rootElement.innerHTML = template
-          SPARouter.#pageScript.innerHTML = script
-        }, 30)
+          SPARouter.render(data)
+        }, 50)
       })
+
+      window.addEventListener('pushstate', this.#handlePaginate.bind(this))
+      window.addEventListener('popstate', this.#handlePaginate.bind(this))
   }
 
   async #getActiveRoute() {
-    return this.#routes.find(async (route) => {
-      if(new RegExp(`^${window.location.pathname}$`).test(route.path)) {
-        return route
-      }
-    }
-    );
+    const regex = new RegExp(`${window.location.pathname}`, 'g')
+    return this.#routes.filter(route => {
+      if(regex.test(route.path)) return route
+    })[0]
+  }
+
+  #handlePaginate() {
+    this.#getActiveRoute()
+    .then(data => {
+      SPARouter.render(data)
+    })
+  }
+
+  static render(data) {
+    const {template, script} = data
+    SPARouter.#rootElement.innerHTML = template
+    SPARouter.#pageScript.innerHTML = script
   }
 
   /**

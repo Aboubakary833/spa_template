@@ -56,7 +56,6 @@ export default class PagesManager {
             this.#data[type] = data
             return this
         }
-
         return data
     }
 

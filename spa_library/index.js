@@ -58,3 +58,5 @@ export default class SPA {
     customElements.define('spa-link', SPALink)
   }
 }
+
+export const PathChanged = new Event('pushstate')
