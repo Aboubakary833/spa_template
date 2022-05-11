@@ -82,11 +82,8 @@ export class ExceptionHandler {
         }
     }
 
-    static loadHTTPErrorsTemplates(url = `${window.location.origin}/spa/Errors`) {
-        fetch(url)
-        .then(res => {
-            console.log(res);
-        })
+    static loadHTTPErrorsTemplates(url = `${window.location.origin}/spa_library/Errors`) {
+        console.log();
     }
 
 
