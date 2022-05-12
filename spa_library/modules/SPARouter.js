@@ -48,9 +48,9 @@ export default class SPARouter extends HTMLElement {
 
       this.#getActiveRoute()
       .then(data => {
-        setTimeout(function() {
-          SPARouter.render(data)
-        }, 50)
+          setTimeout(function() {
+            SPARouter.render(data)
+          }, 50)
       })
 
       window.addEventListener('pushstate', this.#handlePaginate.bind(this))
@@ -59,23 +59,32 @@ export default class SPARouter extends HTMLElement {
 
   async #getActiveRoute() {
     const regex = new RegExp(`${window.location.pathname}`, 'g')
-    return this.#routes.filter(route => {
-      if(regex.test(route.path)) return route
+    const activeRoute = this.#routes.filter(route => {
+      if(regex.test(route.path)) return route;
     })[0]
+
+    if(activeRoute != 'undefined') return activeRoute
   }
 
   #handlePaginate() {
     this.#getActiveRoute()
     .then(data => {
+      console.log(data);
       SPARouter.render(data)
     })
   }
 
   static render(data) {
-    const {template, style, script} = data
-    SPARouter.#pageStyle.innerHTML = style
-    SPARouter.#rootElement.innerHTML = template
-    SPARouter.#pageScript.innerHTML = script
+    if(data) {
+      const {template, style, script} = data
+      SPARouter.#pageStyle.innerHTML = style
+      SPARouter.#rootElement.innerHTML = template
+      SPARouter.#pageScript.innerHTML = script
+    } else {
+      const {style, template} = ExceptionHandler.getNotFoundComponents()
+      SPARouter.#pageStyle.innerHTML = style
+      SPARouter.#rootElement.innerHTML = template
+    }
   }
 
   /**

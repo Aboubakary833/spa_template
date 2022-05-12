@@ -18,7 +18,7 @@ export default class SPA {
    */
   static async init(entrypoint, rootElement = null, options = {}) {
 
-      ExceptionHandler.loadHTTPErrorsTemplates(options?.errorsTemplatePath, options?.errors);
+      ExceptionHandler.loadNotFoundPage(options?.not_found_url);
     new ExceptionHandler().init(rootElement).isInstanceof(HTMLDivElement);
     SPARouter.setRootElement(rootElement)
     this.#initCustomElements();

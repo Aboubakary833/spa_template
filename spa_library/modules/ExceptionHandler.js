@@ -4,7 +4,7 @@ export class ExceptionHandler {
 
     #message;
     #element;
-    static #errorsPages = {}
+    static #notFoundComponents = {}
 
     /**
      * 
@@ -85,20 +85,25 @@ export class ExceptionHandler {
         }
     }
 
-    static async loadHTTPErrorsTemplates(url = `${window.location.origin}/spa_library/Errors`, errors = []) {
-        if(!errors.length) {
-            const response = await fetch(`${url}/404.html`)
+    /**
+     * Fetch and destructure the 404 error page
+     * @param {string} url 
+     */
+    static async loadNotFoundPage(url = `${window.location.origin}/spa_library/Errors/404.html`) {
+        const response = await fetch(url)
             const data = await response.text()
 
             PagesManager.init(data)
+            .getStyle(true)
             .getTemplate(true)
-            .getScript(true)
             
-            const {template, style} = PagesManager.end()
-
-            console.log(template);
-        }
+            this.#notFoundComponents = PagesManager.end()
     }
 
+    /**
+     * Get the 404 - not found error component
+     * @returns Object
+     */
+    static getNotFoundComponents() {return this.#notFoundComponents}
 
 }
