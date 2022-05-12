@@ -1,4 +1,4 @@
-import { PathChanged } from "../index.js"
+import { pushState } from "../index.js"
 
 export default class SPALink extends HTMLElement {
     constructor() {
@@ -23,7 +23,7 @@ export default class SPALink extends HTMLElement {
             link.addEventListener('click', e => {
                 e.preventDefault()
                 window.history.pushState({}, '', link.href)
-                window.dispatchEvent(PathChanged)
+                window.dispatchEvent(pushState)
             })
         })
     }

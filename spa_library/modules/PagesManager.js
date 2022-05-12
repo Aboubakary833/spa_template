@@ -6,11 +6,10 @@ export default class PagesManager {
     static #component;
 
     /**
+     * Get the component as string and init destructuration
      * 
      * @param {String} component 
      * @returns this
-     * 
-     * Get the component as string and init destructuration
      */
     static init(component = undefined) {
         if(!component) {
@@ -22,12 +21,11 @@ export default class PagesManager {
     }
     
     /**
+     * Return HTMLScriptElement content as string if false passed as parameter
+     * Or procceed if true passed as parameter
      * 
      * @param {Boolean} proceed 
      * @returns String || this
-     * 
-     * Return HTMLScriptElement content as string if false passed as parameter
-     * Or procceed if true passed as parameter
      */
     static getScript(proceed = false) {
         return this.#getData('script', proceed)
@@ -36,16 +34,31 @@ export default class PagesManager {
     /**
      * 
      * @param {Boolean} proceed 
-     * @returns String || this
-     * 
+     * @returns || string || this
+     */
+    static getStyle(proceed = false) {
+        return this.#getData('style', proceed)
+    }
+
+    /**
      * Return HTMLTemplateElement content as string if false passed as parameter
      * Or procceed if true passed as parameter
+     * 
+     * @param {Boolean} proceed 
+     * @returns String || this
      */
     static getTemplate(proceed = false) {
         return this.#getData('template', proceed)
     }
 
-    
+    /**
+     * Destructure data
+     * 
+     * @param {string} type 
+     * @param {boolean} proceed 
+     * @returns 
+     */
+
     static #getData(type, proceed) {
         const first_index = this.#component.indexOf(`<${type}>`)
         const second_index = this.#component.indexOf(`</${type}>`)
@@ -60,9 +73,9 @@ export default class PagesManager {
     }
 
     /**
+     * Get the complete data from the destructuring process
      * 
      * @returns Object
-     * All operation after operation
      */
     static end() {
         return this.#data

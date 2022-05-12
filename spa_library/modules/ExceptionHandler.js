@@ -1,7 +1,10 @@
+import PagesManager from "./PagesManager.js";
+
 export class ExceptionHandler {
 
     #message;
     #element;
+    static #errorsPages = {}
 
     /**
      * 
@@ -82,8 +85,19 @@ export class ExceptionHandler {
         }
     }
 
-    static loadHTTPErrorsTemplates(url = `${window.location.origin}/spa_library/Errors`) {
-        console.log();
+    static async loadHTTPErrorsTemplates(url = `${window.location.origin}/spa_library/Errors`, errors = []) {
+        if(!errors.length) {
+            const response = await fetch(`${url}/404.html`)
+            const data = await response.text()
+
+            PagesManager.init(data)
+            .getTemplate(true)
+            .getScript(true)
+            
+            const {template, style} = PagesManager.end()
+
+            console.log(template);
+        }
     }
 
 

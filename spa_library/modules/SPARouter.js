@@ -3,6 +3,7 @@ import PagesManager from "./PagesManager.js";
 
 export default class SPARouter extends HTMLElement {
   static #rootElement;
+  static #pageStyle;
   static #pageScript;
   #routes = [];
 
@@ -34,11 +35,13 @@ export default class SPARouter extends HTMLElement {
           PagesManager
             .init(data)
             .getTemplate(true)
+            .getStyle(true)
             .getScript(true)
 
-            const destructured = PagesManager.end()
-            newRoot['template'] = destructured.template
-            newRoot['script'] = destructured.script
+            const {template, style, script} = PagesManager.end()
+            newRoot['template'] = template
+            newRoot['style'] = style ?? null
+            newRoot['script'] = script ?? null
         })
         return newRoot
       });
@@ -69,7 +72,8 @@ export default class SPARouter extends HTMLElement {
   }
 
   static render(data) {
-    const {template, script} = data
+    const {template, style, script} = data
+    SPARouter.#pageStyle.innerHTML = style
     SPARouter.#rootElement.innerHTML = template
     SPARouter.#pageScript.innerHTML = script
   }
@@ -91,6 +95,9 @@ export default class SPARouter extends HTMLElement {
 
   static setRootElement(rootElement) {
     this.#rootElement = rootElement
+  }
+  static setPageStyle(styleElement) {
+    this.#pageStyle = styleElement
   }
   static setPageScript(scriptElement) {
     this.#pageScript = scriptElement

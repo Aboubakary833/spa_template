@@ -18,10 +18,10 @@ export default class SPA {
    */
   static async init(entrypoint, rootElement = null, options = {}) {
 
-      ExceptionHandler.loadHTTPErrorsTemplates(options?.errorsTemplatePath);
+      ExceptionHandler.loadHTTPErrorsTemplates(options?.errorsTemplatePath, options?.errors);
     new ExceptionHandler().init(rootElement).isInstanceof(HTMLDivElement);
     SPARouter.setRootElement(rootElement)
-    this.#initRouter();
+    this.#initCustomElements();
 
     const data = await SPA.#fetchContent(entrypoint, "text");
 
@@ -29,11 +29,15 @@ export default class SPA {
     const managed_component = ComponentManager.end();
 
     const router = document.createElement("div");
+    const activePageStyle = document.createElement('style')
     const activePageScript = document.createElement('script')
+    activePageStyle.setAttribute('pageStyle', true)
     activePageScript.setAttribute('pageScript', true)
     router.innerHTML = managed_component.template;
     rootElement.insertAdjacentElement("afterEnd", router);
+    document.head.appendChild(activePageStyle)
     router.insertAdjacentElement("afterEnd", activePageScript);
+    SPARouter.setPageStyle(activePageStyle)
     SPARouter.setPageScript(activePageScript)
   }
 
@@ -52,11 +56,11 @@ export default class SPA {
     }
   }
 
-  static #initRouter() {
+  static #initCustomElements() {
     customElements.define("spa-router", SPARouter);
     customElements.define("spa-route", SPARoute);
     customElements.define('spa-link', SPALink)
   }
 }
 
-export const PathChanged = new Event('pushstate')
+export const pushState = new Event('pushstate')
